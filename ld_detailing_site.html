@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LD Detailing</title>
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --panel: #13171d;
+      --panel-2: #191f27;
+      --text: #f4f7fb;
+      --muted: #a6b0bd;
+      --line: rgba(255,255,255,0.09);
+      --accent: #89b7ff;
+      --accent-2: #d7e6ff;
+      --success: #c9ffd8;
+      --shadow: 0 20px 45px rgba(0,0,0,0.35);
+      --radius: 22px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(137,183,255,0.18), transparent 28%),
+        radial-gradient(circle at left center, rgba(255,255,255,0.04), transparent 18%),
+        linear-gradient(180deg, #090b0e 0%, #0d1117 48%, #090b0e 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .wrap {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: rgba(9, 11, 14, 0.72);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      gap: 20px;
+    }
+
+    .brand {
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.96rem;
+    }
+
+    .brand span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .hero {
+      padding: 72px 0 44px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .hero-copy,
+    .hero-card,
+    .section-card,
+    .package,
+    .addon,
+    .note-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+    }
+
+    .hero-copy {
+      padding: 34px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-copy::after {
+      content: "";
+      position: absolute;
+      inset: auto -40px -50px auto;
+      width: 240px;
+      height: 240px;
+      background: radial-gradient(circle, rgba(137,183,255,0.22), transparent 65%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 4.8rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      margin-bottom: 16px;
+      max-width: 11ch;
+    }
+
+    .lead {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 58ch;
+      margin-bottom: 26px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 26px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.96rem;
+      transition: transform 0.2s ease, background 0.2s ease, border 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #a8cbff, #7aaeff);
+      color: #09111f;
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.08);
+      color: var(--text);
+    }
+
+    .hero-points {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .point {
+      padding: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+    }
+
+    .point strong {
+      display: block;
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+
+    .point span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .hero-card {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .hero-card .mini {
+      color: var(--muted);
+      font-size: 0.92rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .hero-card h3 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .hero-card ul,
+    .package ul,
+    .addon ul,
+    .faq ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .hero-card li,
+    .package li,
+    .addon li,
+    .faq li {
+      position: relative;
+      padding-left: 18px;
+      margin: 10px 0;
+      color: var(--muted);
+    }
+
+    .hero-card li::before,
+    .package li::before,
+    .addon li::before,
+    .faq li::before {
+      content: "•";
+      color: var(--accent);
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    section {
+      padding: 22px 0;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      max-width: 62ch;
+    }
+
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .package {
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .package.featured {
+      border-color: rgba(137,183,255,0.34);
+      background: linear-gradient(180deg, rgba(137,183,255,0.08), rgba(255,255,255,0.02));
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(137,183,255,0.12);
+      border: 1px solid rgba(137,183,255,0.22);
+      color: var(--accent-2);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .package-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .package h3 {
+      font-size: 1.42rem;
+      margin-bottom: 6px;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .price {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      white-space: nowrap;
+    }
+
+    .package p.desc {
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 6px;
+    }
+
+    .section-card {
+      padding: 24px;
+    }
+
+    .add-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .addon,
+    .note-card {
+      padding: 24px;
+    }
+
+    .addon-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .addon-row:last-child { border-bottom: 0; }
+
+    .addon-row span:first-child { color: var(--text); }
+    .addon-row span:last-child { color: var(--accent-2); font-weight: 700; white-space: nowrap; }
+
+    .note-card p,
+    .section-card p,
+    .faq p,
+    footer p {
+      color: var(--muted);
+    }
+
+    .faq {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .faq .section-card h3,
+    .note-card h3,
+    .addon h3 {
+      margin-bottom: 10px;
+      font-size: 1.14rem;
+    }
+
+    footer {
+      padding: 30px 0 60px;
+    }
+
+    .footer-card {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .phone {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .muted { color: var(--muted); }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .packages-grid,
+      .split,
+      .add-grid,
+      .faq {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-points {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero { padding-top: 54px; }
+      .hero-copy,
+      .hero-card,
+      .package,
+      .section-card,
+      .addon,
+      .note-card { padding: 20px; }
+      h1 { max-width: 12ch; }
+      .package-top { flex-direction: column; }
+      .nav-inner { align-items: flex-start; }
+      .nav-links { gap: 10px 14px; font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <div class="brand">LD <span>Detailing</span></div>
+      <div class="nav-links">
+        <a href="#services">Services</a>
+        <a href="#addons">Add-Ons</a>
+        <a href="#faq">Info</a>
+        <a href="tel:6314054330">Call</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <div class="eyebrow">Mobile Detailing</div>
+        <h1>Clean results. Clear pricing.</h1>
+        <p class="lead">Professional interior and exterior detailing with simple packages built to fit regular upkeep or deep restoration-level cleaning.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="tel:6314054330">Book Now</a>
+          <a class="btn btn-secondary" href="#services">View Packages</a>
+        </div>
+        <div class="hero-points">
+          <div class="point">
+            <strong>Interior</strong>
+            <span>Maintenance and deep-clean options</span>
+          </div>
+          <div class="point">
+            <strong>Exterior</strong>
+            <span>Decon, protection, trim restoration</span>
+          </div>
+          <div class="point">
+            <strong>Monthly</strong>
+            <span>Maintenance plan for repeat clients</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-card">
+        <div>
+          <div class="mini">Most Popular</div>
+          <h3>Interior + Exterior Plus</h3>
+          <p class="muted">A full deep-clean package for clients who want the biggest overall transformation.</p>
+        </div>
+        <ul>
+          <li>Deep interior shampoo and steam treatment</li>
+          <li>Hand wash and clay bar treatment</li>
+          <li>Up to 6 months of protection</li>
+          <li>Trim and plastic restoration</li>
+          <li>Engine bay detail if requested</li>
+        </ul>
+        <div class="price">$300</div>
+      </aside>
+    </div>
+  </header>
+
+  <main>
+    <section id="services">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Packages</div>
+            <h2>Service Menu</h2>
+          </div>
+          <p>Each package is built to be easy to understand and easy to sell. Plus services are designed for stronger transformations and include the heavier corrective work.</p>
+        </div>
+
+        <div class="packages-grid">
+          <article class="package">
+            <div class="package-top">
+              <div>
+                <h3>Interior Basic</h3>
+                <div class="sub">Regular Maintenance</div>
+              </div>
+              <div class="price">$120</div>
+            </div>
+            <p class="desc">A solid upkeep package for vehicles that need a proper reset without deep extraction work.</p>
+            <ul>
+              <li>Vacuum</li>
+              <li>Interior scrubbing and wipe down</li>
+              <li>Glass cleaning inside and out</li>
+              <li>Door jambs cleaned</li>
+              <li>Protectant applied</li>
+            </ul>
+          </article>
+
+          <article class="package featured">
+            <div class="badge">Deep Clean</div>
+            <div class="package-top">
+              <div>
+                <h3>Interior Plus</h3>
+                <div class="sub">Premium Interior Service</div>
+              </div>
+              <div class="price">$240</div>
+            </div>
+            <p class="desc">Includes everything in Interior Basic, plus deeper fabric and odor-focused cleaning.</p>
+            <ul>
+              <li>Deep shampoo for carpets and seats</li>
+              <li>Steam cleaning to remove stains and odor</li>
+              <li>Protectant applied to finished surfaces</li>
+            </ul>
+          </article>
+
+          <article class="package">
+            <div class="package-top">
+              <div>
+                <h3>Interior + Exterior Basic</h3>
+                <div class="sub">Full Maintenance</div>
+              </div>
+              <div class="price">$160</div>
+            </div>
+            <p class="desc">Best for routine upkeep when the vehicle needs both inside and outside attention.</p>
+            <ul>
+              <li>Hand wash of exterior</li>
+              <li>Vacuum</li>
+              <li>Interior scrubbing and wipe down</li>
+              <li>Glass cleaning inside and out</li>
+              <li>Door jambs cleaned</li>
+              <li>Protectant applied to exterior and interior</li>
+            </ul>
+          </article>
+
+          <article class="package featured">
+            <div class="badge">Best Value</div>
+            <div class="package-top">
+              <div>
+                <h3>Interior + Exterior Plus</h3>
+                <div class="sub">Complete Deep Clean</div>
+              </div>
+              <div class="price">$300</div>
+            </div>
+            <p class="desc">Designed for the biggest transformation. Combines deep interior work with exterior decontamination and longer-lasting protection.</p>
+            <ul>
+              <li>Vacuum, wipe down, glass cleaning, and door jambs</li>
+              <li>Shampoo carpets and seats</li>
+              <li>Steam cleaning for stains and odor</li>
+              <li>Hand wash and clay bar treatment</li>
+              <li>Up to 6 months of protection</li>
+              <li>Trim and plastic restoration</li>
+              <li>Engine bay detail if requested</li>
+            </ul>
+          </article>
+
+          <article class="package">
+            <div class="package-top">
+              <div>
+                <h3>Exterior Basic</h3>
+                <div class="sub">Regular Maintenance</div>
+              </div>
+              <div class="price">$60</div>
+            </div>
+            <p class="desc">A strong value wash package with chemical decontamination and short-term protection.</p>
+            <ul>
+              <li>Hand wash for wheels, tires, and paint</li>
+              <li>Iron decontamination</li>
+              <li>Protection applied up to 1 month</li>
+            </ul>
+          </article>
+
+          <article class="package">
+            <div class="package-top">
+              <div>
+                <h3>Exterior Plus</h3>
+                <div class="sub">Deep Clean Exterior</div>
+              </div>
+              <div class="price">$150</div>
+            </div>
+            <p class="desc">Ideal for rougher paint and vehicles that need full decontamination and stronger protection.</p>
+            <ul>
+              <li>Hand wash for wheels, tires, and paint</li>
+              <li>Protection applied up to 6 months</li>
+              <li>Chemical and mechanical decontamination</li>
+              <li>Clay bar treatment</li>
+              <li>Trim and plastic restoration</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap split">
+        <div class="section-card">
+          <div class="eyebrow">Recurring Clients</div>
+          <h2>Maintenance Package</h2>
+          <p style="margin: 10px 0 16px;">Available to prior customers once a month. Built to keep already-detailed vehicles looking clean without paying for another full service.</p>
+          <div class="package-top" style="margin-bottom: 14px;">
+            <div>
+              <div class="sub">Monthly Maintenance</div>
+            </div>
+            <div class="price">$60</div>
+          </div>
+          <ul>
+            <li>Hand wash of exterior</li>
+            <li>Vacuum</li>
+            <li>Interior scrubbing and wipe down</li>
+            <li>Glass cleaning inside and out</li>
+            <li>Door jambs cleaned</li>
+            <li>Protectant applied to exterior and interior</li>
+          </ul>
+        </div>
+
+        <div class="note-card">
+          <div class="eyebrow">Important</div>
+          <h3>Pricing Notes</h3>
+          <p style="margin-bottom: 14px;">Vehicle condition matters. Excessive buildup, heavy staining, embedded pet hair, or oversized vehicles may require additional charges.</p>
+          <ul>
+            <li>Plus options include most major corrective add-ons already built in</li>
+            <li>Basic packages can be upgraded with add-ons below</li>
+            <li>Mobile-friendly layout makes this page easy to use as a booking menu</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="addons">
+      <div class="wrap add-grid">
+        <div class="addon">
+          <div class="eyebrow">Upgrades</div>
+          <h2>Add-Ons</h2>
+          <p style="margin: 10px 0 16px;">Best used with Basic packages. Plus packages already include most heavier add-on services.</p>
+          <div class="addon-row"><span>Pet hair removal</span><span>$40</span></div>
+          <div class="addon-row"><span>Shampoo carpets and seats</span><span>$40</span></div>
+          <div class="addon-row"><span>Leather conditioning</span><span>$25</span></div>
+          <div class="addon-row"><span>Stain removal</span><span>$40</span></div>
+          <div class="addon-row"><span>Engine bay detail</span><span>$40</span></div>
+        </div>
+
+        <div class="note-card" id="faq">
+          <div class="eyebrow">Why It Works</div>
+          <h3>Simple, easy-to-sell structure</h3>
+          <p style="margin-bottom: 14px;">This setup gives you a low-entry option, a stronger upsell path, and a recurring client offer without making the menu feel crowded.</p>
+          <ul>
+            <li>Interior Basic and Exterior Basic attract budget-conscious customers</li>
+            <li>Plus packages make the higher-ticket option feel worth it</li>
+            <li>The monthly package helps you create repeat income</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="wrap faq">
+        <div class="section-card">
+          <h3>Who is this for?</h3>
+          <p>Drivers who want anything from simple upkeep to a much deeper clean with protection and restoration benefits.</p>
+        </div>
+        <div class="section-card">
+          <h3>What makes Plus different?</h3>
+          <p>Plus packages are for heavier buildup, stain removal, deeper decontamination, and stronger long-term protection.</p>
+        </div>
+        <div class="section-card">
+          <h3>What should clients know?</h3>
+          <p>Excessive wear, heavy pet hair, and unusually dirty vehicles may require added time and an adjusted final quote.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-card">
+      <div>
+        <div class="brand">LD <span>Detailing</span></div>
+        <p style="margin-top: 8px;">Clean layout. Clear pricing. Easy for customers to choose.</p>
+      </div>
+      <div>
+        <div class="muted">Contact</div>
+        <a class="phone" href="tel:6314054330">631-405-4330</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
